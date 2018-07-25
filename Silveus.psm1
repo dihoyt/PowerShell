@@ -70,59 +70,59 @@ Function Get-DistinguishedName ($strUserName)
 ####---- Create User ----####
 Function Add-User ()
 {
-$importcsv = Get-PromptForCSV 
-If ($importcsv -eq $false) {
-$first = Read-Host "First Name"
-$last = Read-Host "Last Name"
-$job = Read-Host "Job Title"
-$dep = Read-Host "Department"
-$company = Read-Host "Company"
-$emaildomain = Read-Host "Sign in Domain (ex: cropins.net)"
-$password = Read-Host -AsSecureString "Password"
-$manager = Read-Host "Manager (first.last)"
-$OU = 'OU=Warsaw,OU=SIG,OU=Cedar Holdings,OU=Users,OU=MyBusiness,DC=SilveusInsurance,DC=local'
-$fullname = $first + ' ' + $last
-$samacc = $first + '.' + $last
-$upn = $samacc + '@' + $emaildomain
-$replyto = $samacc + '@' + $emaildomain
+    $importcsv = Get-PromptForCSV 
+    If ($importcsv -eq $false) {
+    $first = Read-Host "First Name"
+    $last = Read-Host "Last Name"
+    $job = Read-Host "Job Title"
+    $dep = Read-Host "Department"
+    $company = Read-Host "Company"
+    $emaildomain = Read-Host "Sign in Domain (ex: cropins.net)"
+    $password = Read-Host -AsSecureString "Password"
+    $manager = Read-Host "Manager (first.last)"
+    $OU = 'OU=Warsaw,OU=SIG,OU=Cedar Holdings,OU=Users,OU=MyBusiness,DC=SilveusInsurance,DC=local'
+    $fullname = $first + ' ' + $last
+    $samacc = $first + '.' + $last
+    $upn = $samacc + '@' + $emaildomain
+    $replyto = $samacc + '@' + $emaildomain
 
 
-Write-Host "A user will be created with the following details."
-Write-Host 'Name:'$First $Last
-Write-Host 'Email/Sign-On Address:' $upn
-Write-Host 'Organization Info:'$Job',' $dep',' $company 
-Write-Host 'Manager:'$manager
-Write-Host ''
-Write-Host "If this info looks innacurate press CTRL+C to quit. Otherwise,"
+    Write-Host "A user will be created with the following details."
+    Write-Host 'Name:'$First $Last
+    Write-Host 'Email/Sign-On Address:' $upn
+    Write-Host 'Organization Info:'$Job',' $dep',' $company 
+    Write-Host 'Manager:'$manager
+    Write-Host ''
+    Write-Host "If this info looks innacurate press CTRL+C to quit. Otherwise,"
 
-New-ADUser -SamAccountName $samacc -UserPrincipalName $upn -AccountPassword $password -Name $fullname `
--GivenName $first -Surname $last -DisplayName $fullname -Path $OU -Manager $manager -Company $company `
--Title $job -Department $dep -Enabled $true -Email $replyto
-Write-Host 'User has been created in the following directory:'$OU
+    New-ADUser -SamAccountName $samacc -UserPrincipalName $upn -AccountPassword $password -Name $fullname `
+    -GivenName $first -Surname $last -DisplayName $fullname -Path $OU -Manager $manager -Company $company `
+    -Title $job -Department $dep -Enabled $true -Email $replyto
+    Write-Host 'User has been created in the following directory:'$OU
 } ElseIf ($importcsv -eq $true) {
-$inputfile = Get-FileName "C:\Users\$([Environment]::UserName)\Desktop"
-$inputdata = Import-Csv $inputfile
-$password = Read-Host -AsSecureString "Password for accounts."
-foreach ($line in $inputdata) {
-$first = $inputdata.First
-$last = $inputdata.Last
-$job = $inputdata.Title
-$dep = $inputdata.Department
-$company = $inputdata.Company
-$emaildomain = $inputdata.Domain
-$manager = $inputdata.Manager
-$OU = 'OU=Warsaw,OU=SIG,OU=Cedar Holdings,OU=Users,OU=MyBusiness,DC=SilveusInsurance,DC=local'
-$fullname = $first + ' ' + $last
-$samacc = $first + '.' + $last
-$upn = $samacc + '@' + $emaildomain
-$replyto = $samacc + '@' + $emaildomain
+    $inputfile = Get-FileName "C:\Users\$([Environment]::UserName)\Desktop"
+    $inputdata = Import-Csv $inputfile
+    $password = Read-Host -AsSecureString "Password for accounts."
+    foreach ($line in $inputdata) {
+        $first = $inputdata.First
+        $last = $inputdata.Last
+        $job = $inputdata.Title
+        $dep = $inputdata.Department
+        $company = $inputdata.Company
+        $emaildomain = $inputdata.Domain
+        $manager = $inputdata.Manager
+        $OU = 'OU=Warsaw,OU=SIG,OU=Cedar Holdings,OU=Users,OU=MyBusiness,DC=SilveusInsurance,DC=local'
+        $fullname = $first + ' ' + $last
+        $samacc = $first + '.' + $last
+        $upn = $samacc + '@' + $emaildomain
+        $replyto = $samacc + '@' + $emaildomain
 
-New-ADUser -SamAccountName $samacc -UserPrincipalName $upn -AccountPassword $password -Name $fullname `
--GivenName $first -Surname $last -DisplayName $fullname -Path $OU -Manager $manager -Company $company `
--Title $job -Department $dep -Enabled $true -Email $replyto
-Write-Host 'Users have been added in the following directory:'$OU
-}
-}
+        New-ADUser -SamAccountName $samacc -UserPrincipalName $upn -AccountPassword $password -Name $fullname `
+        -GivenName $first -Surname $last -DisplayName $fullname -Path $OU -Manager $manager -Company $company `
+        -Title $job -Department $dep -Enabled $true -Email $replyto
+        Write-Host 'Users have been added in the following directory:'$OU
+    }
+    }
 }
 ####---- End Create User ----####
 
