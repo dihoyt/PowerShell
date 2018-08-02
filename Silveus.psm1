@@ -189,7 +189,8 @@ Function Suspend-User ($strUserName)
             Write-Host "Primary reply-to address assigned to manager."
             Write-Host "Please assign reply-to address to manager."
     } Else {
-        $inputdata = Get-FileName "C:\Users\$([Environment]::UserName)\Desktop"
+        $inputfile = Get-FileName "C:\Users\$([Environment]::UserName)\Desktop"
+        $inputdata = Import-Csv $inputfile
         foreach ($line in $inputdata) {
             $strUserName = $inputdata.Username
             $strDN = Get-DistinguishedName $strUserName
@@ -205,6 +206,7 @@ Function Suspend-User ($strUserName)
 
             Get-ADUser -Identity $strUserName -Properties MemberOf | ForEach-Object {
                 $_.MemberOf | Remove-ADGroupMember -Members $_.DistinguishedName -Confirm:$false
+            Write-Host "User" $strUserName "has been disabled."
             }
         }
     }
